@@ -2,25 +2,43 @@
 <html>
 
   <head>
-    <title>NodeJS Starter Application</title>
+    <title>Berthing Time Predication</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="stylesheets/style.css">
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js" ></script>
+	<script>
+		function calculate() {
+			var objectId = $('#objectId').val();
+			var isWeather = $('#isWeather').is(':checked');
+			
+			$.ajax({
+				url: '/calculateETB',
+				data: {objectId: objectId, isWeather: isWeather },
+				success: function(data) {
+					$('#result').html('Estimated time of berthing is ' + data);
+				},
+				error: function(data) {
+					$('#result').html('<div class="error">Could not load resutls for ' + objectId + ', please try again!</div>');
+				}
+			});
+		}
+	</script>
   </head>
 
   <body>
-    <table>
-      <tr>
-        <td style= "width:30%;">
-          <img class = "newappIcon" src="images/newapp-icon.png">
-        </td>
-        <td>
-          <h1 id="message">Hello World!</h1>
-          <p class='description'></p> Thanks for creating a <span class = "blue">NodeJS Starter Application</span>.
-        </td>
-      </tr>
-    </table>
+    <div class="header">Berthing Time Prediction for Antwerp</div>
+	<div class="container">
+		<div class="row">
+			<input type="text" id="objectId" placeholder="Object ID" value="urn:svp:vsid:MSK000021"/>
+			<button class="button" onclick="calculate()">Calculate</button>
+		</div>
+		<div class="row">
+			<input type="checkbox" id="isWeather" /> Take weather condition into consideration
+		</div>
+		<div class="row result" id="result"></div>
+	</div>
   </body>
 
 </html>
